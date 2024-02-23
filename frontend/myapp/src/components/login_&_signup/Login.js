@@ -1,30 +1,25 @@
 import React, { useState } from "react";
 import expense from "./expense.jpg";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-function SignUp() {
+function Login() {
   const [email, setEmail] = useState("");
-  const [pwd, setPwd] = useState("");
-  const [name, setName] = useState("");
+  const [pswd, setPswd] = useState("");
 
-  const nameInputHandler = (e) => {
-    setName(e.target.value);
-  };
   const emailInputHandler = (e) => {
     setEmail(e.target.value);
   };
   const pswdInputHandler = (e) => {
-    setPwd(e.target.value);
+    setPswd(e.target.value);
   };
   const submitHandler = (e) => {
     e.preventDefault();
     const obj = {
-      name: name,
       email: email,
-      password: pwd,
+      password: pswd,
     };
-    console.log(name, email, pwd);
+    console.log(email, pswd);
     console.log(obj);
     axios
       .post("http://localhost:4000/signup", obj)
@@ -36,29 +31,17 @@ function SignUp() {
         console.log(err.response.data);
       });
     setEmail("");
-    setName("");
-    setPwd("");
+    setPswd("");
   };
   return (
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
       <div class="relative flex flex-col m-6 space-y-8 bg-white shadow-2xl rounded-2xl md:flex-row md:space-y-0">
         <div class="flex flex-col justify-center p-8 md:p-14">
-          <span class="mb-3 text-4xl font-bold"> Welcome To Expense App </span>
+          <span class="mb-3 text-4xl font-bold">Welcome back</span>
           <span class="font-light text-gray-400 mb-8">
-            Please enter your details
+            Welcom back! Please enter your details
           </span>
           <form action="" onSubmit={submitHandler}>
-            <div class="py-4">
-              <span class="mb-2 text-md">Name</span>
-              <input
-                type="text"
-                class="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
-                name="name"
-                id="name"
-                onChange={nameInputHandler}
-                value={name}
-              />
-            </div>
             <div class="py-4">
               <span class="mb-2 text-md">Email</span>
               <input
@@ -66,8 +49,8 @@ function SignUp() {
                 class="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                 name="email"
                 id="email"
-                onChange={emailInputHandler}
                 value={email}
+                onChange={emailInputHandler}
               />
             </div>
             <div class="py-4">
@@ -77,8 +60,8 @@ function SignUp() {
                 name="pass"
                 id="pass"
                 class="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
+                value={pswd}
                 onChange={pswdInputHandler}
-                value={pwd}
               />
             </div>
             <div class="flex justify-between w-full py-4">
@@ -89,12 +72,12 @@ function SignUp() {
               <span class="font-bold text-md">Forgot password</span>
             </div>
             <button class="w-full bg-black text-white p-2 rounded-lg mb-6 hover:bg-white hover:text-black hover:border hover:border-gray-300">
-              Sign in
+              Login
             </button>
             <div class="text-center text-gray-400">
-              Have an account?
-              <Link class="font-bold text-black" to="/login">
-                Login
+              Dont'have an account?
+              <Link class="font-bold text-black" to="/signup">
+                Sign up for free
               </Link>
             </div>
           </form>
@@ -112,4 +95,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default Login;
