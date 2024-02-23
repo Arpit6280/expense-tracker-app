@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./database");
 const User = require("./model/User");
+const bcrypt = require("bcrypt");
 
 const app = express();
 app.use(cors());
@@ -16,18 +17,21 @@ app.post("/signup", (req, res, next) => {
   User.findAll({ where: { email: email } }).then((users) => {
     console.log("888", users);
     if (users.length == 0) {
-      User.create({
-        email: email,
-        name: name,
-        password: password,
-      })
-        .then((result) => {
-          console.log(result);
-          res.status(201).json(result);
+      const saltrounds = 10;
+      bcrypt.hash(password, saltrounds, async (err, hash) => {
+        User.create({
+          email: email,
+          name: name,
+          password: hash,
         })
-        .catch((err) => {
-          console.log(err);
-        });
+          .then((result) => {
+            console.log(result);
+            res.status(201).json(result);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
     } else {
       res.status(409).send("email already exists");
     }
@@ -42,9 +46,14 @@ app.post("/login", (req, res, next) => {
       res.status(404).send("User not found");
     } else {
       console.log("***", users[0].email);
-      if (users[0].password === password)
-        res.status(201).send("User login successfully");
-      else res.status(404).send("User not authorized");
+      bcrypt.compare(password, users[0].password, (err, result) => {
+        if (err) {
+          res.status(500).json({ success: false, message: "Something wrong" });
+        }
+        if (result === true) {
+          res.status(200).json("User logged in successfully");
+        } else res.status(404).send("Password incorrect");
+      });
     }
   });
 });
