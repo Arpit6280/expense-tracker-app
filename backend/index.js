@@ -34,6 +34,21 @@ app.post("/signup", (req, res, next) => {
   });
 });
 
+app.post("/login", (req, res, next) => {
+  let { email, password } = req.body;
+  console.log(email, password);
+  User.findAll({ where: { email: email } }).then((users) => {
+    if (users.length == 0) {
+      res.status(404).send("User not found");
+    } else {
+      console.log("***", users[0].email);
+      if (users[0].password === password)
+        res.status(201).send("User login successfully");
+      else res.status(404).send("User not authorized");
+    }
+  });
+});
+
 sequelize
   .sync()
   .then((result) => {

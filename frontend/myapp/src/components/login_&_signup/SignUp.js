@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import expense from "./expense.jpg";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -19,6 +20,10 @@ function SignUp() {
   };
   const submitHandler = (e) => {
     e.preventDefault();
+    if (name === "" || pwd === "" || !email.includes("@")) {
+      toast.error("All field are required");
+      return;
+    }
     const obj = {
       name: name,
       email: email,
@@ -30,10 +35,11 @@ function SignUp() {
       .post("http://localhost:4000/signup", obj)
       .then((res) => {
         console.log(res);
+        toast.success("Sign Up Successful! Now Login");
       })
       .catch((err) => {
         console.log(err);
-        console.log(err.response.data);
+        toast.error(err.response.data);
       });
     setEmail("");
     setName("");
