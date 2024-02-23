@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import expense from "./expense.jpg";
+import axios from "axios";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,22 @@ function SignUp() {
   };
   const submitHandler = (e) => {
     e.preventDefault();
+    const obj = {
+      name: name,
+      email: email,
+      password: pwd,
+    };
     console.log(name, email, pwd);
+    console.log(obj);
+    axios
+      .post("http://localhost:4000/signup", obj)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(err.response.data);
+      });
     setEmail("");
     setName("");
     setPwd("");
