@@ -1,15 +1,35 @@
 import React from "react";
-
+import axios from "axios";
+import { toast } from "react-toastify";
 function ExpenseLists(props) {
   const date = new Date(props.expense.date);
   const year = date.getFullYear();
   const month = date.getMonth() + 1; // Months are zero-based, so we add 1
   const day = date.getDate();
+  const deleteExpense = async () => {
+    const token = localStorage.getItem("token");
+    await axios.delete(
+      `http://localhost:4000/expense/delete/${props.expense.id}`,
+      {
+        headers: { Authorization: token },
+      }
+    );
+    toast.success("Expense Delted Succesfully");
+  };
   return (
-    <li>
-      {day}/{month}/{year} {props.expense.description} {props.expense.category}{" "}
-      {props.expense.amount}{" "}
-    </li>
+    <>
+      <tr className="">
+        <td>
+          {day}-{month}-{year}{" "}
+        </td>
+        <td> {props.expense.description}</td>
+        <td>{props.expense.category}</td>
+        <td> {props.expense.amount}</td>
+        <td>
+          <button onClick={deleteExpense}>Delete</button>{" "}
+        </td>
+      </tr>
+    </>
   );
 }
 

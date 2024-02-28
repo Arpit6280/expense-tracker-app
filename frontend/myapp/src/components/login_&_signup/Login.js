@@ -29,7 +29,9 @@ function Login() {
     axios
       .post("http://localhost:4000/login", obj)
       .then((res) => {
-        toast.success(res.data);
+        localStorage.setItem("token", res.data.token);
+        toast.success(res.data.message);
+        console.log(res.data);
       })
       .catch((err) => {
         toast.error(err.response.data);

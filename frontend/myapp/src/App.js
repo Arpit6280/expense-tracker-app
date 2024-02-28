@@ -14,9 +14,10 @@ function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/addexpense" element={<AddExpense />} />
+        <Route path="/" element={<Expenses />} />
       </Routes>
       <ToastContainer />
-      <Expenses />
+      {/* <Expenses /> */}
     </>
   );
 }

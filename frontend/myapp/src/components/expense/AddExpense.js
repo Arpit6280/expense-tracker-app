@@ -1,12 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import Expenses from "../expenses/Expenses";
+import React, { useState } from "react";
+
+import { useNavigate } from "react-router-dom";
 
 function AddExpense() {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
+  const navigate = useNavigate();
+
   const descriptionInputHandler = (e) => {
     setDescription(e.target.value);
   };
@@ -27,10 +30,14 @@ function AddExpense() {
       category,
       date,
     };
+    const token = localStorage.getItem("token");
     axios
-      .post("http://localhost:4000/expense/addexpenses", obj)
+      .post("http://localhost:4000/expense/addexpenses", obj, {
+        headers: { Authorization: token },
+      })
       .then((res) => {
         console.log(res);
+        navigate("/", { replace: true });
       })
       .catch((err) => {
         console.log(err);
