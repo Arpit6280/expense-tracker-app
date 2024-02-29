@@ -45,6 +45,7 @@ exports.loginUser = (req, res, next) => {
       res.status(404).send("User not found");
     } else {
       console.log("***", users[0].email);
+      // users enter password, // db users password, callback function
       bcrypt.compare(password, users[0].password, (err, result) => {
         if (err) {
           res.status(500).json({ success: false, message: "Something wrong" });
@@ -58,4 +59,14 @@ exports.loginUser = (req, res, next) => {
       });
     }
   });
+};
+
+exports.isPremium = (req, res, next) => {
+  User.findByPk(req.user.id)
+    .then((user) => {
+      res.status(201).json(user);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

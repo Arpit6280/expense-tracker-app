@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const userRoutes = require("./controllers/user");
 const purchaseRoutes = require("./controllers/purchase");
 const expenseRoutes = require("./controllers/expense");
+const premiumRoutes = require("./controllers/premium");
 const Expense = require("./model/Expense");
 const { authenticate } = require("./middleware/auth");
 const Order = require("./model/Order");
@@ -19,6 +20,8 @@ app.use(bodyParser.json());
 app.post("/signup", userRoutes.signUpUser);
 
 app.post("/login", userRoutes.loginUser);
+
+app.get("/user/premium", authenticate, userRoutes.isPremium);
 
 app.post("/expense/addexpenses", authenticate, expenseRoutes.addExpense);
 
@@ -40,6 +43,12 @@ app.post(
   "/purchase/updatetransactionstatus",
   authenticate,
   purchaseRoutes.updateTransactionStatus
+);
+
+app.get(
+  "/premium/showleaderboard",
+  authenticate,
+  premiumRoutes.showLeaderBoard
 );
 
 User.hasMany(Expense);

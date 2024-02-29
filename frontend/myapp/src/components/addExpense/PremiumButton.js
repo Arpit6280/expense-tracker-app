@@ -3,21 +3,40 @@ import React, { useEffect, useState } from "react";
 
 function PremiumButton() {
   const [isPremium, setIsPremium] = useState(false);
+  const [isshowLeaderBoard, setShowLeaderBoadr] = useState(false);
+  const [userLeaderBoards, setUserLeaderBoard] = useState([]);
 
   useEffect(() => {
+    premiumUser();
+    // const token = localStorage.getItem("token");
+    // axios
+    //   .get("http://localhost:4000/user/premium", {
+    //     headers: { Authorization: token },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     setIsPremium(res.data.ispremiumuser);
+    //     // setData(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+  }, []);
+  const premiumUser = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:4000/expense/getexpenses", {
+      .get("http://localhost:4000/user/premium", {
         headers: { Authorization: token },
       })
       .then((res) => {
         console.log(res);
+        setIsPremium(res.data.ispremiumuser);
         // setData(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  };
   const premiumHandler = async (e) => {
     const token = localStorage.getItem("token");
     const response = await axios.get(
@@ -28,7 +47,7 @@ function PremiumButton() {
     );
     console.log(response);
     var options = {
-      key: "rzp_test_GLtj7fFuhaZ6vJ",
+      key: response.data.key_id,
       order_id: response.data.order.id,
       handler: async function (response) {
         await axios.post(
@@ -42,6 +61,7 @@ function PremiumButton() {
           }
         );
         alert("You are premium user now");
+        premiumUser();
       },
     };
     const rzp = new window.Razorpay(options);
@@ -49,9 +69,21 @@ function PremiumButton() {
     e.preventDefault();
 
     rzp.on("payment.failed", function (response) {
-      console.log(response);
-      alert("Something went wrong");
+      console.log("eeeeeeeeddd", response);
+      alert("Something went wroong");
     });
+  };
+  const showLeaderBoard = async () => {
+    const token = localStorage.getItem("token");
+    const userLeaderBoard = await axios.get(
+      "http://localhost:4000/premium/showleaderboard",
+      {
+        headers: { Authorization: token },
+      }
+    );
+    console.log(userLeaderBoard);
+    setShowLeaderBoadr(true);
+    setUserLeaderBoard(userLeaderBoard.data);
   };
   return (
     <div>
@@ -60,7 +92,18 @@ function PremiumButton() {
           <button onClick={premiumHandler}>Buy Premium</button>{" "}
         </div>
       ) : (
-        "You are a premium user "
+        <div>
+          You are a premium user
+          <button onClick={showLeaderBoard}>Show LeaderBoard</button>
+          {isshowLeaderBoard
+            ? userLeaderBoards.map((user) => (
+                <li>
+                  {" "}
+                  {user.name} Total Expense {user.total}
+                </li>
+              ))
+            : ""}
+        </div>
       )}
     </div>
   );

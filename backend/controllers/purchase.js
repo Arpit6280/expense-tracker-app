@@ -28,29 +28,28 @@ exports.purchasePremium = (req, res, next) => {
   }
 };
 
-exports.updateTransactionStatus = (req, res) => {
+exports.updateTransactionStatus = async (req, res) => {
   try {
+    console.log("hiiiiiiiiiiiiiiiiiii");
     const { payment_id, order_id } = req.body;
-    Order.findOne({ where: { orderid: order_id } }).then((order) => {
-      order
-        .update({ paymentid: payment_id, status: "SUCCESSFUL" })
-        .then(() => {
-          req.user
-            .update({ ispremiumuser: true })
-            .then(() => {
-              return res
-                .status(202)
-                .json({ success: true, message: "Transaction successfull" });
-            })
-            .catch((err) => {
-              throw new Error(err);
-            });
-        })
-        .catch((err) => {
-          throw new Error(err);
-        });
-    });
+    const order = await Order.findOne({ where: { orderid: order_id } }); //2sec
+
+    const promise1 = await order.update({
+      paymentid: payment_id,
+      status: "SUCCESSFUL",
+    }); //3sec
+    const promise2 = await req.user.update({ ispremiumuser: true }); //4sec
+    Promise.all([promise1, promise2])
+      .then(() => {
+        return res
+          .status(202)
+          .json({ success: true, message: "Transaction successfull" });
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
   } catch (err) {
     console.log(err);
+    res.status(403).json({ error: err, message: "Something went wrong" });
   }
 };
