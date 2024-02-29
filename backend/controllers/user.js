@@ -15,6 +15,8 @@ exports.signUpUser = (req, res, next) => {
           email: email,
           name: name,
           password: hash,
+          totalAmount: 0,
+          ispremiumuser: false,
         })
           .then((result) => {
             console.log(result);

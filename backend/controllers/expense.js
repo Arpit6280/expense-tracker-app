@@ -1,4 +1,5 @@
 const Expense = require("../model/Expense");
+const User = require("../model/User");
 
 exports.getExpenses = (req, res, next) => {
   // req.user.getExpenses()
@@ -20,19 +21,43 @@ exports.addExpense = (req, res, next) => {
   //   category,
   //   date,
   // });
-  req.user
-    .createExpense({
-      description,
-      amount,
-      category,
-      date,
+  User.findByPk(req.user.id)
+    .then((user) => {
+      user.totalAmount = parseInt(user.totalAmount) + parseInt(amount);
+      return user.save();
     })
-    .then((result) => {
-      res.status(200).json(result);
+    .then(() => {
+      req.user
+        .createExpense({
+          description,
+          amount,
+          category,
+          date,
+        })
+        .then((result) => {
+          res.status(200).json(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     })
     .catch((err) => {
       console.log(err);
     });
+
+  // req.user
+  //   .createExpense({
+  //     description,
+  //     amount,
+  //     category,
+  //     date,
+  //   })
+  //   .then((result) => {
+  //     res.status(200).json(result);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 exports.deleteExpense = (req, res, next) => {

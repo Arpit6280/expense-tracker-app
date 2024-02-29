@@ -99,7 +99,7 @@ function PremiumButton() {
             ? userLeaderBoards.map((user) => (
                 <li>
                   {" "}
-                  {user.name} Total Expense {user.total}
+                  {user.name} Total Expense {user.totalAmount}
                 </li>
               ))
             : ""}
