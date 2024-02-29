@@ -3,7 +3,7 @@ import SignUp from "./components/login_&_signup/SignUp";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddExpense from "./components/expense/AddExpense";
+import AddExpense from "./components/addExpense/AddExpense";
 import Expenses from "./components/expenses/Expenses";
 
 function App() {
