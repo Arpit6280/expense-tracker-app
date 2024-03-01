@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AddExpense from "./components/addExpense/AddExpense";
 import Expenses from "./components/expenses/Expenses";
 import ForgetPassword from "./components/forgetPassword/ForgetPassword";
+import ResetPassword from "./components/forgetPassword/ResetPassword";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/addexpense" element={<AddExpense />} />
         <Route path="/" element={<Expenses />} />
         <Route path="/forgetpassword" element={<ForgetPassword />} />
+        <Route path="/password/resetpassword/:id" element={<ResetPassword />} />
       </Routes>
       <ToastContainer />
       {/* <Expenses /> */}

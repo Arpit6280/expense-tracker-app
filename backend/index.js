@@ -12,6 +12,7 @@ const forgetPasswordRoutes = require("./controllers/forgetPassword");
 const Expense = require("./model/Expense");
 const { authenticate } = require("./middleware/auth");
 const Order = require("./model/Order");
+const ForgetPassword = require("./model/ForgotPassword");
 
 const app = express();
 app.use(cors());
@@ -54,11 +55,21 @@ app.get(
 
 app.post("/password/forgotpassword", forgetPasswordRoutes.forgetPassword);
 
+app.use("/password/resetpassword/:id", forgetPasswordRoutes.resetPassword);
+
+app.post(
+  "/password/updatepassword/:resetpasswordid",
+  forgetPasswordRoutes.updatePassword
+);
+
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+User.hasMany(ForgetPassword);
+ForgetPassword.belongsTo(User);
 
 sequelize
   .sync()
