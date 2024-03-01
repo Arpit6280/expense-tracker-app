@@ -1,3 +1,5 @@
+const e = require("cors");
+const sequelize = require("../database");
 const Expense = require("../model/Expense");
 const User = require("../model/User");
 
@@ -13,58 +15,53 @@ exports.getExpenses = (req, res, next) => {
     });
 };
 
-exports.addExpense = (req, res, next) => {
-  let { description, amount, category, date } = req.body;
-  // Expense.create({
-  //   description,
-  //   amount,
-  //   category,
-  //   date,
-  // });
-  User.findByPk(req.user.id)
-    .then((user) => {
-      user.totalAmount = parseInt(user.totalAmount) + parseInt(amount);
-      return user.save();
-    })
-    .then(() => {
-      req.user
-        .createExpense({
-          description,
-          amount,
-          category,
-          date,
-        })
-        .then((result) => {
-          res.status(200).json(result);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+exports.addExpense = async (req, res, next) => {
+  const t = await sequelize.transaction();
+  try {
+    let { description, amount, category, date } = req.body;
+    const user = await User.findByPk(req.user.id);
+    user.totalAmount = parseInt(user.totalAmount) + parseInt(amount);
+    await user.save({ transaction: t });
 
-  // req.user
-  //   .createExpense({
-  //     description,
-  //     amount,
-  //     category,
-  //     date,
-  //   })
-  //   .then((result) => {
-  //     res.status(200).json(result);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+    let result = await req.user.createExpense(
+      {
+        description,
+        amount,
+        category,
+        date,
+      },
+      { transaction: t }
+    );
+    await t.commit();
+    res.status(200).json(result);
+  } catch (err) {
+    await t.rollback();
+    console.log(e);
+  }
 };
 
-exports.deleteExpense = (req, res, next) => {
+exports.deleteExpense = async (req, res, next) => {
+  const t = await sequelize.transaction();
   const expenseId = req.params.expenseId;
-  Expense.findAll({ where: { id: expenseId, userId: req.user.id } })
-    .then((expense) => expense[0].destroy())
-    .catch((e) => {
+
+  let amount;
+  Expense.findAll(
+    { where: { id: expenseId, userId: req.user.id } },
+    { transaction: t }
+  )
+    .then((expense) => {
+      amount = expense[0].amount;
+      expense[0].destroy();
+    })
+    .then(() => {
+      User.findByPk(req.user.id).then(async (user) => {
+        user.totalAmount = parseInt(user.totalAmount) - parseInt(amount);
+        await user.save({ transaction: t });
+        await t.commit();
+      });
+    })
+    .catch(async (e) => {
+      await t.rollback();
       console.log(e);
     });
 };
