@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import expense from "./expense.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [pswd, setPswd] = useState("");
+  const navigate = useNavigate();
 
   const emailInputHandler = (e) => {
     setEmail(e.target.value);
@@ -32,6 +33,7 @@ function Login() {
         localStorage.setItem("token", res.data.token);
         toast.success(res.data.message);
         console.log(res.data);
+        navigate("/");
       })
       .catch((err) => {
         toast.error(err.response.data);
@@ -45,7 +47,7 @@ function Login() {
         <div class="flex flex-col justify-center p-8 md:p-14">
           <span class="mb-3 text-4xl font-bold">Welcome back</span>
           <span class="font-light text-gray-400 mb-8">
-            Welcom back! Please enter your details
+            Welcome back! Please enter your details
           </span>
           <form action="" onSubmit={submitHandler}>
             <div class="py-4">
@@ -75,7 +77,9 @@ function Login() {
                 <input type="checkbox" name="ch" id="ch" class="mr-2" />
                 <span class="text-md">Remember for 30 days</span>
               </div>
-              <span class="font-bold text-md">Forgot password</span>
+              <Link class="font-bold text-md" to="/forgetpassword">
+                Forgot password
+              </Link>
             </div>
             <button class="w-full bg-black text-white p-2 rounded-lg mb-6 hover:bg-white hover:text-black hover:border hover:border-gray-300">
               Login

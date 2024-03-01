@@ -8,6 +8,7 @@ const userRoutes = require("./controllers/user");
 const purchaseRoutes = require("./controllers/purchase");
 const expenseRoutes = require("./controllers/expense");
 const premiumRoutes = require("./controllers/premium");
+const forgetPasswordRoutes = require("./controllers/forgetPassword");
 const Expense = require("./model/Expense");
 const { authenticate } = require("./middleware/auth");
 const Order = require("./model/Order");
@@ -50,6 +51,8 @@ app.get(
   authenticate,
   premiumRoutes.showLeaderBoard
 );
+
+app.post("/password/forgotpassword", forgetPasswordRoutes.forgetPassword);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
