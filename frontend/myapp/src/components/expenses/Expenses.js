@@ -21,17 +21,17 @@ function Expenses(props) {
   }, []);
   const download = () => {
     axios
-      .get("http://localhost:3000/user/download", {
+      .get("http://localhost:4000/premium/download", {
         headers: { Authorization: token },
       })
       .then((response) => {
         if (response.status === 201) {
           //the bcakend is essentially sending a download link
           //  which if we open in browser, the file would download
-          var a = document.createElement("a");
-          a.href = response.data.fileUrl;
-          a.download = "myexpense.csv";
-          a.click();
+          // var a = document.createElement("a");
+          // a.href = response.data.fileURl;
+          // a.download = "myexpense.csv";
+          // a.click();
         } else {
           throw new Error(response.data.message);
         }

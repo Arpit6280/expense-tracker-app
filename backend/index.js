@@ -62,6 +62,8 @@ app.post(
   forgetPasswordRoutes.updatePassword
 );
 
+app.get("/premium/download", authenticate, premiumRoutes.download);
+
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
