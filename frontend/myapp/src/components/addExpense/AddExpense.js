@@ -26,24 +26,44 @@ function AddExpense() {
   };
   const expenseSubmitHandler = (e) => {
     e.preventDefault();
+    console.log(date);
+    let [year, month, day] = date.split("-");
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    month = monthNames[month - 1];
     let obj = {
       description,
       amount,
       category,
       date,
+      year,
+      month,
     };
     const token = localStorage.getItem("token");
-    axios
-      .post("http://localhost:4000/expense/addexpenses", obj, {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        console.log(res);
-        navigate("/", { replace: true });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // axios
+    //   .post("http://localhost:4000/expense/addexpenses", obj, {
+    //     headers: { Authorization: token },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     navigate("/", { replace: true });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
     console.log(obj);
   };
 
@@ -140,7 +160,7 @@ function AddExpense() {
           </button>
         </form>
       </div>
-      <PremiumButton />
+      {/* <PremiumButton /> */}
     </div>
   );
 }

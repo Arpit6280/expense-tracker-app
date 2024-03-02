@@ -59,14 +59,11 @@ exports.forgetPassword = async (req, res, next) => {
 
 exports.resetPassword = (req, res, next) => {
   let id = req.params.id;
-  // console.log("rresetttttttttt");
-  // console.log(id);
   ForgetPassword.findOne({ where: { id: id } }).then((frgtPswdreq) => {
     if (frgtPswdreq) {
       console.log("frgtPswdreq", frgtPswdreq.isActive);
       frgtPswdreq.isActive = true;
       frgtPswdreq.save();
-      // frgtPswdreq.update({ isActive: false });
     }
   });
 };
