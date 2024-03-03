@@ -7,8 +7,10 @@ const { Op } = require("sequelize");
 exports.getExpenses = (req, res, next) => {
   // req.user.getExpenses()
   let page = Number(req.query.pages);
+  let EXPENSE_PER_PAGE = Number(req.query.expensePerPage);
+  console.log(EXPENSE_PER_PAGE);
 
-  let ITEMS_PER_PAGE = 2;
+  // let EXPENSE_PER_PAGE = 2;
   let totalExpenses;
   console.log("page", page);
   Expense.count()
@@ -17,17 +19,17 @@ exports.getExpenses = (req, res, next) => {
       totalExpenses = total;
       return Expense.findAll({
         where: { userId: req.user.id },
-        limit: ITEMS_PER_PAGE,
-        offset: (page - 1) * ITEMS_PER_PAGE,
+        limit: EXPENSE_PER_PAGE,
+        offset: (page - 1) * EXPENSE_PER_PAGE,
       });
     })
     .then((expenses) => {
       console.log("eeeee", expenses);
       let obj = {
         currentPage: page,
-        hasNextPage: ITEMS_PER_PAGE * page < totalExpenses,
+        hasNextPage: EXPENSE_PER_PAGE * page < totalExpenses,
         hasPreviousPage: page > 1,
-        lastPage: Math.ceil(totalExpenses / ITEMS_PER_PAGE),
+        lastPage: Math.ceil(totalExpenses / EXPENSE_PER_PAGE),
         nextPage: Number(page) + 1,
         previousPage: page - 1,
       };

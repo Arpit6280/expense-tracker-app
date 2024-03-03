@@ -5,6 +5,9 @@ import PremiumButton from "../addExpense/PremiumButton";
 
 function Expenses(props) {
   const [data, setData] = useState([]);
+  const [expensePerPage, setexpensePerPage] = useState(
+    localStorage.getItem("expensePerPage") || 2
+  );
   const [showData, setShowData] = useState({
     currentPage: 1,
     hasNextPage: "",
@@ -16,9 +19,12 @@ function Expenses(props) {
   const token = localStorage.getItem("token");
   useEffect(() => {
     axios
-      .get("http://localhost:4000/expense/getexpenses?pages=1", {
-        headers: { Authorization: token },
-      })
+      .get(
+        `http://localhost:4000/expense/getexpenses?pages=1&expensePerPage=${expensePerPage}`,
+        {
+          headers: { Authorization: token },
+        }
+      )
       .then((res) => {
         console.log(res);
         setData(res.data.expenses);
@@ -29,7 +35,7 @@ function Expenses(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [expensePerPage]);
   console.log(showData);
   const download = () => {
     axios
@@ -55,15 +61,24 @@ function Expenses(props) {
   const paginationHandler = (e) => {
     let page = e.target.innerText;
     axios
-      .get(`http://localhost:4000/expense/getexpenses?pages=${page}`, {
-        headers: { Authorization: token },
-      })
+      .get(
+        `http://localhost:4000/expense/getexpenses?pages=${page}&expensePerPage=${expensePerPage}`,
+        {
+          headers: { Authorization: token },
+        }
+      )
       .then((res) => {
         // setData(res.data);
         setData(res.data.expenses);
         setShowData(res.data.pageData);
         console.log(res.data.pageData);
       });
+  };
+  const selectHandler = (e) => {
+    console.log(e.target);
+    console.log(e.target.value);
+    localStorage.setItem("expensePerPage", e.target.value);
+    setexpensePerPage(e.target.value);
   };
   // console.log(props);
   return (
@@ -109,7 +124,15 @@ function Expenses(props) {
           </div>
         </div>
         <div>
+          {console.log(localStorage.getItem("expensePerPage"))}
           <button onClick={download}>Download</button>
+          <select name="" id="" onChange={selectHandler}>
+            <option value="2">2</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
           <PremiumButton />
         </div>
       </div>
