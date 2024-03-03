@@ -2,16 +2,39 @@ const e = require("cors");
 const sequelize = require("../database");
 const Expense = require("../model/Expense");
 const User = require("../model/User");
+const { Op } = require("sequelize");
 
 exports.getExpenses = (req, res, next) => {
   // req.user.getExpenses()
-  Expense.findAll({ where: { userId: req.user.id } })
+  let page = Number(req.query.pages);
+
+  let ITEMS_PER_PAGE = 2;
+  let totalExpenses;
+  console.log("page", page);
+  Expense.count()
+    .then((total) => {
+      console.log("total", total);
+      totalExpenses = total;
+      return Expense.findAll({
+        where: { userId: req.user.id },
+        limit: ITEMS_PER_PAGE,
+        offset: (page - 1) * ITEMS_PER_PAGE,
+      });
+    })
     .then((expenses) => {
       console.log("eeeee", expenses);
-      res.status(200).json(expenses);
+      let obj = {
+        currentPage: page,
+        hasNextPage: ITEMS_PER_PAGE * page < totalExpenses,
+        hasPreviousPage: page > 1,
+        lastPage: Math.ceil(totalExpenses / ITEMS_PER_PAGE),
+        nextPage: Number(page) + 1,
+        previousPage: page - 1,
+      };
+      res.status(200).json({ expenses, pageData: obj });
     })
     .catch((err) => {
-      console.log(err);
+      console.log("errrrr", err);
     });
 };
 

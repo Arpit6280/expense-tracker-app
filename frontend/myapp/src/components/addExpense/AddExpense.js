@@ -53,17 +53,17 @@ function AddExpense() {
       month,
     };
     const token = localStorage.getItem("token");
-    // axios
-    //   .post("http://localhost:4000/expense/addexpenses", obj, {
-    //     headers: { Authorization: token },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     navigate("/", { replace: true });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    axios
+      .post("http://localhost:4000/expense/addexpenses", obj, {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        console.log(res);
+        navigate("/", { replace: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     console.log(obj);
   };
 

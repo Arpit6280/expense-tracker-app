@@ -5,20 +5,32 @@ import PremiumButton from "../addExpense/PremiumButton";
 
 function Expenses(props) {
   const [data, setData] = useState([]);
+  const [showData, setShowData] = useState({
+    currentPage: 1,
+    hasNextPage: "",
+    hasPreviousPage: "",
+    lastPage: "",
+    nextPage: "",
+    previousPage: "",
+  });
   const token = localStorage.getItem("token");
   useEffect(() => {
     axios
-      .get("http://localhost:4000/expense/getexpenses", {
+      .get("http://localhost:4000/expense/getexpenses?pages=1", {
         headers: { Authorization: token },
       })
       .then((res) => {
         console.log(res);
-        setData(res.data);
+        setData(res.data.expenses);
+        setShowData(res.data.pageData);
+        console.log(res.data.pageData);
+        console.log(showData);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+  console.log(showData);
   const download = () => {
     axios
       .get("http://localhost:4000/premium/download", {
@@ -40,7 +52,20 @@ function Expenses(props) {
         console.log(err);
       });
   };
-  console.log(props);
+  const paginationHandler = (e) => {
+    let page = e.target.innerText;
+    axios
+      .get(`http://localhost:4000/expense/getexpenses?pages=${page}`, {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        // setData(res.data);
+        setData(res.data.expenses);
+        setShowData(res.data.pageData);
+        console.log(res.data.pageData);
+      });
+  };
+  // console.log(props);
   return (
     <>
       <div className="flex  ">
@@ -64,6 +89,24 @@ function Expenses(props) {
               ))}
             </tbody>
           </table>
+          <div onClick={paginationHandler}>
+            {showData.hasPreviousPage ? (
+              <button onClick={paginationHandler}>
+                {" "}
+                {showData.previousPage}{" "}
+              </button>
+            ) : (
+              ""
+            )}
+            <button style={{ margin: "0 1rem" }} onClick={paginationHandler}>
+              {showData.currentPage}
+            </button>
+            {showData.hasNextPage ? (
+              <button onClick={paginationHandler}> {showData.nextPage} </button>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
         <div>
           <button onClick={download}>Download</button>
