@@ -1,8 +1,14 @@
 const Sequelize = require("sequelize");
+require("dotenv").config();
 
-const sequelize = new Sequelize("expense-app", "root", "12345678", {
-  dialect: "mysql",
-  host: "localhost",
-});
+const sequelize = new Sequelize(
+  "expense-app",
+  process.env.DB,
+  process.env.PASSWORD,
+  {
+    dialect: "mysql",
+    host: "localhost",
+  }
+);
 
 module.exports = sequelize;

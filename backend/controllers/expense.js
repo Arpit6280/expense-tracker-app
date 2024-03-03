@@ -24,7 +24,6 @@ exports.getExpenses = (req, res, next) => {
       });
     })
     .then((expenses) => {
-      console.log("eeeee", expenses);
       let obj = {
         currentPage: page,
         hasNextPage: EXPENSE_PER_PAGE * page < totalExpenses,
