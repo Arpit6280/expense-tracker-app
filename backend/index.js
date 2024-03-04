@@ -4,6 +4,10 @@ const cors = require("cors");
 const sequelize = require("./database");
 const User = require("./model/User");
 const bcrypt = require("bcrypt");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 const userRoutes = require("./controllers/user");
 const purchaseRoutes = require("./controllers/purchase");
 const expenseRoutes = require("./controllers/expense");
@@ -18,6 +22,15 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
+
+app.use(helmet());
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flag: "a" }
+);
+
+app.use(morgan("combined", { stream: accessLogStream }));
 
 app.post("/signup", userRoutes.signUpUser);
 
@@ -63,6 +76,8 @@ app.post(
 );
 
 app.get("/premium/download", authenticate, premiumRoutes.download);
+
+// app.use((req, res) => {});
 
 User.hasMany(Expense);
 Expense.belongsTo(User);

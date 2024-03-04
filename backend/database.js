@@ -2,12 +2,12 @@ const Sequelize = require("sequelize");
 require("dotenv").config();
 
 const sequelize = new Sequelize(
-  "expense-app",
+  process.env.DBNAME,
   process.env.DB,
   process.env.PASSWORD,
   {
     dialect: "mysql",
-    host: "localhost",
+    host: process.env.DB_HOST,
   }
 );
 
