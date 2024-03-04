@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import request from "../Requests";
 
 function ForgetPassword() {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ function ForgetPassword() {
     };
     console.log(obj);
     axios
-      .post("http://localhost:4000/password/forgotpassword", obj)
+      .post(`${request}/password/forgotpassword`, obj)
       .then((res) => {
         console.log(res);
       })

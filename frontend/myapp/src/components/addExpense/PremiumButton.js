@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import request from "../Requests";
 
 function PremiumButton() {
   const [isPremium, setIsPremium] = useState(false);
@@ -8,24 +9,11 @@ function PremiumButton() {
 
   useEffect(() => {
     premiumUser();
-    // const token = localStorage.getItem("token");
-    // axios
-    //   .get("http://localhost:4000/user/premium", {
-    //     headers: { Authorization: token },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     setIsPremium(res.data.ispremiumuser);
-    //     // setData(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   }, []);
   const premiumUser = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:4000/user/premium", {
+      .get(`${request}/user/premium`, {
         headers: { Authorization: token },
       })
       .then((res) => {
@@ -39,19 +27,16 @@ function PremiumButton() {
   };
   const premiumHandler = async (e) => {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      "http://localhost:4000/purchase/premiummember",
-      {
-        headers: { Authorization: token },
-      }
-    );
+    const response = await axios.get(`${request}/purchase/premiummember`, {
+      headers: { Authorization: token },
+    });
     console.log(response);
     var options = {
       key: response.data.key_id,
       order_id: response.data.order.id,
       handler: async function (response) {
         await axios.post(
-          "http://localhost:4000/purchase/updatetransactionstatus",
+          `${request}/purchase/updatetransactionstatus`,
           {
             order_id: options.order_id,
             payment_id: response.razorpay_payment_id,
@@ -76,7 +61,7 @@ function PremiumButton() {
   const showLeaderBoard = async () => {
     const token = localStorage.getItem("token");
     const userLeaderBoard = await axios.get(
-      "http://localhost:4000/premium/showleaderboard",
+      `${request}/premium/showleaderboard`,
       {
         headers: { Authorization: token },
       }

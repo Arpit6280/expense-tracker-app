@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import request from "../Requests";
 function ExpenseLists(props) {
   const date = new Date(props.expense.date);
   const year = date.getFullYear();
@@ -8,12 +9,9 @@ function ExpenseLists(props) {
   const day = date.getDate();
   const deleteExpense = async () => {
     const token = localStorage.getItem("token");
-    await axios.delete(
-      `http://localhost:4000/expense/delete/${props.expense.id}`,
-      {
-        headers: { Authorization: token },
-      }
-    );
+    await axios.delete(`${request}/expense/delete/${props.expense.id}`, {
+      headers: { Authorization: token },
+    });
     toast.success("Expense Delted Succesfully");
   };
   return (

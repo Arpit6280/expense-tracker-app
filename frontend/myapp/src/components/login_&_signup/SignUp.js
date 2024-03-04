@@ -3,6 +3,7 @@ import expense from "./expense.jpg";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import request from "../Requests";
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ function SignUp() {
     console.log(name, email, pwd);
     console.log(obj);
     axios
-      .post("http://localhost:4000/signup", obj)
+      .post(`${request}signup`, obj)
       .then((res) => {
         console.log(res);
         toast.success("Sign Up Successful! Now Login");

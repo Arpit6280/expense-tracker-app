@@ -3,6 +3,7 @@ import expense from "./expense.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import request from "../Requests";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -28,7 +29,7 @@ function Login() {
     console.log(email, pswd);
     console.log(obj);
     axios
-      .post("http://localhost:4000/login", obj)
+      .post(`${request}/login`, obj)
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         toast.success(res.data.message);

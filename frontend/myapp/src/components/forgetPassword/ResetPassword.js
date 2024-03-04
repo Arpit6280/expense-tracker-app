@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import request from "../Requests";
 
 function ResetPassword() {
   const [newpassword, setNewPassword] = useState("");
@@ -9,11 +10,9 @@ function ResetPassword() {
   console.log(params.id);
   let id = params.id;
   useEffect(() => {
-    axios
-      .get(`http://localhost:4000/password/resetpassword/${id}`)
-      .then((res) => {
-        console.log(res);
-      });
+    axios.get(`${request}/password/resetpassword/${id}`).then((res) => {
+      console.log(res);
+    });
   });
   const passwordHandler = (e) => {
     setNewPassword(e.target.value);
@@ -26,10 +25,7 @@ function ResetPassword() {
     };
     console.log(id);
     axios
-      .post(
-        `http://localhost:4000/password/updatepassword/${resetpasswordid}`,
-        obj
-      )
+      .post(`${request}/password/updatepassword/${resetpasswordid}`, obj)
       .then((res) => {
         console.log(res);
       })

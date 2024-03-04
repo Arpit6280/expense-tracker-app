@@ -3,7 +3,7 @@ import React, { useState } from "react";
 // import Razorpay from "razorpay";
 
 import { useNavigate } from "react-router-dom";
-import PremiumButton from "./PremiumButton";
+import request from "../Requests";
 
 function AddExpense() {
   const [description, setDescription] = useState("");
@@ -54,7 +54,7 @@ function AddExpense() {
     };
     const token = localStorage.getItem("token");
     axios
-      .post("http://localhost:4000/expense/addexpenses", obj, {
+      .post(`${request}/expense/addexpenses`, obj, {
         headers: { Authorization: token },
       })
       .then((res) => {
@@ -66,42 +66,6 @@ function AddExpense() {
       });
     console.log(obj);
   };
-
-  // const premiumHandler = async (e) => {
-  //   const token = localStorage.getItem("token");
-  //   const response = await axios.get(
-  //     "http://localhost:4000/purchase/premiummember",
-  //     {
-  //       headers: { Authorization: token },
-  //     }
-  //   );
-  //   console.log(response);
-  //   var options = {
-  //     key: "rzp_test_GLtj7fFuhaZ6vJ",
-  //     order_id: response.data.order.id,
-  //     handler: async function (response) {
-  //       await axios.post(
-  //         "http://localhost:4000/purchase/updatetransactionstatus",
-  //         {
-  //           order_id: options.order_id,
-  //           payment_id: response.razorpay_payment_id,
-  //         },
-  //         {
-  //           headers: { Authorization: token },
-  //         }
-  //       );
-  //       alert("You are premium user now");
-  //     },
-  //   };
-  //   const rzp = new window.Razorpay(options);
-  //   rzp.open();
-  //   e.preventDefault();
-
-  //   rzp.on("payment.failed", function (response) {
-  //     console.log(response);
-  //     alert("Something went wrong");
-  //   });
-  // };
 
   return (
     <div style={{ width: "100%" }}>
@@ -160,7 +124,6 @@ function AddExpense() {
           </button>
         </form>
       </div>
-      {/* <PremiumButton /> */}
     </div>
   );
 }

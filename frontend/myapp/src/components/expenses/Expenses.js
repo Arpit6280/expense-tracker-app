@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ExpenseLists from "./ExpenseLists";
 import axios from "axios";
 import PremiumButton from "../addExpense/PremiumButton";
+import request from "../Requests";
 
 function Expenses(props) {
   const [data, setData] = useState([]);
@@ -20,7 +21,7 @@ function Expenses(props) {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:4000/expense/getexpenses?pages=1&expensePerPage=${expensePerPage}`,
+        `${request}/expense/getexpenses?pages=1&expensePerPage=${expensePerPage}`,
         {
           headers: { Authorization: token },
         }
@@ -39,7 +40,7 @@ function Expenses(props) {
   console.log(showData);
   const download = () => {
     axios
-      .get("http://localhost:4000/premium/download", {
+      .get(`${request}/premium/download`, {
         headers: { Authorization: token },
       })
       .then((response) => {
@@ -62,7 +63,7 @@ function Expenses(props) {
     let page = e.target.innerText;
     axios
       .get(
-        `http://localhost:4000/expense/getexpenses?pages=${page}&expensePerPage=${expensePerPage}`,
+        `${request}/expense/getexpenses?pages=${page}&expensePerPage=${expensePerPage}`,
         {
           headers: { Authorization: token },
         }
